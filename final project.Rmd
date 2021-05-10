@@ -1,0 +1,111 @@
+---
+title: "Final Project"
+author: "Rahman Durowoju"
+date: "28/04/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(knitr)
+library(tidyverse)
+library(RColorBrewer)
+library(ggthemes)
+library(ggplot2)
+library(lubridate)
+opts_chunk$set(echo = TRUE)
+getwd()
+dir()
+dir('data')
+```
+
+# Introduction
+I would be talking about is the correlations between host countries and countries winning the world cup and the number of counties that qualified for the tournament as there has been a selective set of teams which have won the trophy but in different years to which has been a big factor into which countries get to win the world cup. While I would be applying this  data set to other European leagues and compare the number of points it takes to win their leagues. The European leagues I would be applying this data set to is the Spanish la Liga and German Bundesliga.  
+
+# Research Questions
+I wanted to understand the relationship between teams that win the world cup and the number of of teams that qualify for the tournament that year, how it affects their chances of winning the competition, the number of games played per each competition and how many goals it takes to win the competition. 
+
+1. Number of goals scored each year Brazil won the world cup with how many matches that were played. 
+2. Number of countries that won the world cup in what year and how many goals were scored 
+3. the number of times a country has won the competition, with the number of attendance per year
+4. Number of times hosted by countries except for England
+5. Number of times a country has won the competition
+6. Number of qualified teams in host countries from the year 1930 - 2014
+
+# Methods
+
+I would be using a world cup csv file which would include a a year column, host country,  winner, runner-up, goals scored, attendance, qualified teams and matches played. these are the columns i would be using in answering my research questions and create a table and grapgh. 
+
+```{r}
+world_cup <- read_csv("data/WorldCups.csv")
+# glimpse or other data summary
+glimpse(world_cup)
+
+world_cup%>%
+  filter(Winner == 'Brazil') %>%
+  ggplot(aes(x = Year,y = GoalsScored,
+             fill = MatchesPlayed))+
+  geom_col(position = "dodge")
+```
+
+
+```{r}
+world_cup %>%
+  ggplot(aes(x = Winner,y = Country, color = Attendance))+
+  geom_point()+
+  geom_line()
+
+```
+
+
+```{r}
+world_cup %>%
+  group_by(Winner) %>%
+  filter(Winner != 'Brazil') %>%
+  ggplot(aes(x = Winner,y = GoalsScored, fill = Year))+
+  geom_col(position = "dodge")
+```
+
+```{r}
+world_cup%>%
+  group_by(Country) %>%
+  filter(Country != 'England') %>%
+  ggplot(aes(x = GoalsScored,y = Country, fill= Winner))+
+  geom_col(position = "dodge")
+```
+
+
+
+```{r fig.height=20, fig.width=10 }
+world_cup%>%
+  group_by(Winner)%>%
+  ggplot(aes(x = Year,y = GoalsScored,
+             color = Winner))+
+  geom_line()
+```
+
+```{r}
+world_cup%>%
+  group_by(QualifiedTeams)%>%
+  ggplot(aes(x = Year,y = QualifiedTeams,
+             color = Winner))+
+  geom_point()+
+  geom_line()
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Conclusion
+
+I would be talking about is the correlations between host countries and countries winning the world cup and the number of counties that qualified for the tournament as there has been a selective set of teams which have won the trophy but in different years to which has been a big factor into which countries get to win the world cup. While I would be applying this  data set to other European leagues and compare the number of points it takes to win their leagues. The European leagues I would be applying this data set to is the Spanish la Liga and German Bundesliga. 
+1) The first result for the first table shows the mean qualified teams and mean matches played from the year 1930 - 2014
+2) The second result shows the number of times every country has hosted a world cup event. 
+3) There is a variance with the number of attendance from the 1930's and attendance increased over the years with the       most in the 2000's
+4) The most a country has hosted the competition has  been twice with only a selected countries making the list
+5) The country to win the competition the most is brazil has they hae won it five times over the life time of the of the    competition
+
+
+# References
+
+Becklas, Andre. “FIFA World Cup.” Kaggle, 23 Apr. 2018, www.kaggle.com/abecklas/fifa-world-cup?select=WorldCups.csv. 
+
